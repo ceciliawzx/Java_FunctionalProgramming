@@ -9,7 +9,7 @@ public class Rectangle {
     private final Point bottomRight;
 
     public Rectangle(Point topLeft, int width, int height) {
-        if (topLeft.getX() < 0 || topLeft.getY() < 0) {
+        if (topLeft.getX() < 0 || topLeft.getY() < 0 || width < 0 || height < 0) {
             throw new IllegalArgumentException("parameters must be non-negative");
         }
         this.topLeft = topLeft;
@@ -45,11 +45,15 @@ public class Rectangle {
     }
 
     public Rectangle setWidth(int newWidth) {
-        return new Rectangle(this.topLeft, newWidth, this.getHeight());
+        if (newWidth < 0) {
+            throw new IllegalArgumentException();
+        } else return new Rectangle(this.topLeft, newWidth, this.getHeight());
     }
 
     public Rectangle setHeight(int newHeight) {
-        return new Rectangle(this.topLeft, this.getWidth(), newHeight);
+        if (newHeight < 0) {
+            throw new IllegalArgumentException();
+        } else return new Rectangle(this.topLeft, this.getWidth(), newHeight);
     }
 
     public Point getTopLeft() {

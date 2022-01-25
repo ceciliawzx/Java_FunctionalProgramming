@@ -7,8 +7,7 @@ public class StringPrefixes {
 
   /** Return the number of strings in the "strings" stream that start with the "prefix" string. */
   public static int countStringsStartingWithPrefix(Stream<String> strings, String prefix) {
-    // TODO: implement
-    return -1;
+    return (int) strings.filter(s -> s.startsWith(prefix)).count();
   }
 
   /**
@@ -19,8 +18,11 @@ public class StringPrefixes {
    */
   public static String emphasiseFirstStringStartingWithPrefix(
       Stream<String> strings, String prefix) {
-    // TODO: implement
-    return null;
+    Stream<String> startsWithPrefix = strings.filter(s -> s.startsWith(prefix));
+    String res = startsWithPrefix.findFirst().orElse("N/A");
+    if (res == "N/A") {
+      return res;
+    } else return "*" + prefix + "*" + res.substring(prefix.length());
   }
 
   /**
@@ -29,7 +31,6 @@ public class StringPrefixes {
    */
   public static List<String> distinctStringsStartingWithPrefix(
       Stream<String> strings, String prefix) {
-    // TODO: implement
-    return null;
+    return strings.filter(s -> s.startsWith(prefix)).distinct().toList();
   }
 }

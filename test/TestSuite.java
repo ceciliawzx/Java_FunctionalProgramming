@@ -1,9 +1,11 @@
 import advancedstreams.CubeSupplier;
+import advancedstreams.StringPrefixes;
 import org.junit.Test;
 import rectangles.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.assertTrue;
@@ -723,7 +725,7 @@ public class TestSuite {
   //===============================
   // 7. Tests for streams of cubes.
   //===============================
- /*
+
   @Test
   public void cubeSupplier() {
     final CubeSupplier cubeSupplier = new CubeSupplier();
@@ -736,6 +738,7 @@ public class TestSuite {
   public void cubeStream() {
     assertTrue(CubeSupplier.cubeStream().anyMatch(item -> item == 1000));
   }
+
 
   @Test(expected = NoSuchElementException.class)
   public void cubeStreamException() {
@@ -816,36 +819,156 @@ public class TestSuite {
           StringPrefixes.distinctStringsStartingWithPrefix(strings.stream(), "Haskell"));
   }
 
-  */
-
   // ============================
   // Additional tests for Point.
   // ============================
 
-  // TODO: write your additional tests for the Point class here
+  @Test
+  //return false if two points are the same
+  public void pointIsLeftOf2() {
+    assertTrue(new Point(0, 0).isLeftOf(new Point(1, 0)));
+    assertFalse(new Point(0, 0).isLeftOf(new Point(0, 0)));
+  }
+
+  @Test
+  //return false if two points are the same
+  public void pointIsRightOf2() {
+    assertFalse(new Point(100, 100).isRightOf(new Point(100, 100)));
+  }
+
+  @Test
+  //return false if two points are the same
+  public void pointIsAbove2() {
+    assertFalse(new Point(0, 0).isAbove(new Point(0, 0)));
+  }
+
+  @Test
+  //return false if two points are the same
+  public void pointIsBelow2() {
+    assertFalse(new Point(100, 100).isBelow(new Point(100, 100)));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  //can throw expected exception when the parameter is negative.
+  public void pointSetX2() {
+    Point point = new Point(1, 1);
+    point.setX(-1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  //can throw expected exception when the parameter is negative.
+  public void pointSetY2() {
+    Point point = new Point(1, 1);
+    point.setY(-1);
+  }
 
   // ================================
   // Additional tests for Rectangle.
   // ================================
 
-  // TODO: write your additional tests for the Rectangle class here
+
+  @Test(expected = IllegalArgumentException.class)
+  // can throw expected exception when parameter is negative
+  public void rectangleConstructor4() {
+    Rectangle rectangle = new Rectangle(new Point(-1,-1), 3, 4);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  // can throw expected exception when parameter is negative
+  public void rectangleConstructor5() {
+    Rectangle rectangle = new Rectangle(new Point(1,1), -2, -2);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  // can throw expected exception when parameter is negative
+  public void rectangleSetHeight2() {
+    Rectangle rectangle = new Rectangle(new Point(1,2), 3, 4);
+    rectangle.setHeight(-1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  // can throw expected exception when parameter is negative
+  public void rectangleSetWidth2() {
+    Rectangle rectangle = new Rectangle(new Point(1,2), 3, 4);
+    rectangle.setWidth(-1);
+  }
+
+  @Test
+  // can return 0 when area is 0
+  public void rectangleArea2() {
+    assertEquals(0, new Rectangle(new Point(1,1), 0, 0).area());
+  }
 
   // =====================================
   // Additional tests for ListAlgorithms.
   // =====================================
 
-  // TODO: write your additional tests for the ListAlgorithms class here
+  private final List<Rectangle> originalRectangles = List.of(new Rectangle(new Point(1, 1), 0, 0));
+  @Test
+  // return the original rectangle(point) when width and height are 0
+  public void rectangleScale() {
+    assertTrue(equalRectangleLists(originalRectangles, ListAlgorithms.scale(originalRectangles, 10)));
+  }
+
+  @Test
+  // return an empty list when no rectangle intersects with the given rectangle.
+  public void rectangleGetAllIntersect() {
+    assertEquals(List.of(), ListAlgorithms.getAllIntersecting(originalRectangles, new Rectangle(new Point(3, 3), 3, 3)));
+  }
+
+  @Test
+  // return 0 when all rectangles are points(area = 0)
+  public void rectangleLargestArea() {
+    assertEquals(0, ListAlgorithms.findLargestArea(originalRectangles));
+  }
+
+  @Test
+  // return 0 when all rectangles are points(area = 0)
+  public void rectangleSumOfArea() {
+    assertEquals(0, ListAlgorithms.getSumOfAreas(originalRectangles));
+  }
+
 
   // =======================================
   // Additional tests for StreamAlgorithms.
   // =======================================
 
-  // TODO: write your additional tests for the StreamAlgorithms class here
+  @Test
+  // return the original rectangle(point) when width and height are 0
+  public void rectangleScale2() {
+    assertTrue(equalRectangleLists(originalRectangles, StreamAlgorithms.scale(originalRectangles.stream(),
+            10).collect(Collectors.toList())));
+  }
+
+  @Test
+  // return an empty list when no rectangle intersects with the given rectangle.
+  public void rectangleGetAllIntersect2() {
+    assertEquals(List.of(), StreamAlgorithms.getAllIntersecting(originalRectangles.stream(),
+            new Rectangle(new Point(3, 3), 3, 3)).collect(Collectors.toList()));
+  }
+
+  @Test
+  // return 0 when all rectangles are points(area = 0)
+  public void rectangleLargestArea2() {
+    assertEquals(0, StreamAlgorithms.findLargestArea(originalRectangles.stream()));
+  }
+
+  @Test
+  // return 0 when all rectangles are points(area = 0)
+  public void rectangleSumOfArea2() {
+    assertEquals(0, StreamAlgorithms.getSumOfAreas(originalRectangles.stream()));
+  }
 
   // ==============================================
   // Additional tests for intersecting rectangles.
   // ==============================================
 
-  // TODO: write your additional tests related to rectangle intersection here
+  @Test
+  // return true when two rectangles intersect but the intersection area is 0
+  public void rectangleIntersect() {
+    Rectangle r1 = new Rectangle(new Point(0, 0), 3, 3);
+    Rectangle r2 = new Rectangle(new Point(3,3), 3, 3);
+    assertTrue(r1.intersects(r2));
+  }
 
 }
